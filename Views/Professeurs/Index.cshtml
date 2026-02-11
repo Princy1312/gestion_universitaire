@@ -1,0 +1,429 @@
+@model IEnumerable<Professeur>
+@{
+    ViewData["Title"] = "Professeurs";
+}
+
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
+        --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
+
+    .page-header {
+        background: var(--gradient-warning);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: #1e293b;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(40px);
+        transform: scale(1.1);
+    }
+
+    .table-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        overflow: hidden;
+    }
+
+    .table-modern {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .table-modern thead th {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        border: none;
+        font-weight: 600;
+        color: var(--text-primary);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-modern tbody tr:hover {
+        background: rgba(245, 158, 11, 0.1);
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    }
+
+    .btn-action {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        margin: 0 2px;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .modal-modern .modal-content {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--glass-shadow-hover);
+    }
+
+    .badge-modern {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .badge-matricule {
+        background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        color: #1e293b;
+    }
+
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .form-floating-modern label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+        border-radius: 8px;
+    }
+
+    @@keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+</style>
+
+<div class="container-fluid py-5">
+    <!-- Header moderne -->
+    <div class="page-header fade-in">
+        <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
+            <div>
+                <h1 class="h2 mb-1 fw-bold"><i class="bi bi-person-badge me-3"></i>Gestion des professeurs</h1>
+                <p class="mb-0 opacity-90">(@Model.Count() professeurs)</p>
+            </div>
+            <button type="button" class="btn fw-semibold px-4 py-2" style="background: rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.4); border-radius: 16px; backdrop-filter: blur(10px);" data-bs-toggle="modal" data-bs-target="#createProfesseurModal">
+                <i class="bi bi-person-plus me-2"></i>Nouveau professeur
+            </button>
+        </div>
+    </div>
+
+    <!-- Tableau responsive -->
+    <div class="card table-container fade-in">
+        <div class="table-responsive">
+            <table class="table table-modern mb-0">
+                <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom complet</th>
+                        <th>Email</th>
+                        <th>Spécialité</th>
+                        <th>Grade</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="bi bi-person-badge display-3 opacity-25 mb-4 d-block"></i>
+                                <h4 class="mb-2">Aucun professeur trouvé</h4>
+                                <p class="mb-0">Commencez par ajouter votre premier professeur.</p>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var prof in Model)
+                    {
+                        <tr class="fade-in">
+                            <td>
+                                <span class="badge badge-modern badge-matricule">@prof.Matricule</span>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong class="d-block text-primary">@prof.Nom</strong>
+                                    <small class="text-secondary">@prof.Prenom</small>
+                                </div>
+                            </td>
+                            <td>
+                                <small class="text-secondary d-block">@prof.Email</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-outline-primary badge-modern">@(prof.Specialite ?? "Non spécifiée")</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold badge bg-outline-secondary badge-modern">@(prof.Grade ?? "Non spécifié")</span>
+                            </td>
+                            <td>
+                                @if (prof.Actif)
+                                {
+                                    <span class="badge bg-success badge-modern">Actif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary badge-modern">Inactif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn-action btn-outline-info" onclick="loadProfDetails(@prof.Id)" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn-action btn-outline-warning" onclick="loadProfEdit(@prof.Id)" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="/Professeurs/Delete/@prof.Id" class="btn-action btn-outline-danger" title="Supprimer" onclick="return confirm('Confirmer la suppression de ce professeur ?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Create Professeur Modal -->
+<div class="modal fade modal-modern" id="createProfesseurModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus me-2 text-success"></i>Ajouter un professeur</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="createProfesseurForm" class="needs-validation" novalidate>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Matricule" name="Matricule" placeholder="PROF-2024-001" required />
+                                <label for="Matricule">Matricule <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom" required />
+                                <label for="Nom">Nom <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Prenom" name="Prenom" placeholder="Prénom" required />
+                                <label for="Prenom">Prénom <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="Email" name="Email" placeholder="email@example.com" required />
+                                <label for="Email">Email <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Email valide requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="Telephone" name="Telephone" placeholder="Téléphone" />
+                                <label for="Telephone">Téléphone</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Specialite" name="Specialite" placeholder="Spécialité" />
+                                <label for="Specialite">Spécialité</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Grade" name="Grade" placeholder="Grade" />
+                                <label for="Grade">Grade</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-3 px-4" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="createProfesseurForm" class="btn text-white rounded-3 px-4 fw-semibold" style="background: var(--gradient-warning);">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade modal-modern" id="profDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-eye me-2 text-info"></i>Détails complets</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="profDetailsContent">
+                <!-- Chargement dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade modal-modern" id="profEditModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-pencil me-2 text-warning"></i>Modifier</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="profEditContent">
+                <!-- Chargement dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Scripts améliorés avec skeletons
+    function showSkeleton(containerId) {
+        document.getElementById(containerId).innerHTML = `
+            <div class="row g-3">
+                <div class="col-12"><div class="skeleton" style="height: 20px;"></div></div>
+                <div class="col-md-6"><div class="skeleton" style="height: 40px;"></div></div>
+                <div class="col-md-6"><div class="skeleton" style="height: 40px;"></div></div>
+            </div>
+        `;
+    }
+
+    function loadProfDetails(id) {
+        showSkeleton('profDetailsContent');
+        fetch(`/Professeurs/Details/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const content = doc.querySelector('.card-body')?.innerHTML || html;
+                document.getElementById('profDetailsContent').innerHTML = content;
+                new bootstrap.Modal(document.getElementById('profDetailsModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('profDetailsContent').innerHTML = '<div class="alert alert-danger">Erreur de chargement.</div>';
+                new bootstrap.Modal(document.getElementById('profDetailsModal')).show();
+            });
+    }
+
+    function loadProfEdit(id) {
+        showSkeleton('profEditContent');
+        fetch(`/Professeurs/Edit/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const form = doc.querySelector('form')?.outerHTML || html;
+                document.getElementById('profEditContent').innerHTML = form;
+                new bootstrap.Modal(document.getElementById('profEditModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('profEditContent').innerHTML = '<div class="alert alert-danger">Erreur de chargement.</div>';
+                new bootstrap.Modal(document.getElementById('profEditModal')).show();
+            });
+    }
+
+    // Gestion form create avec validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const createForm = document.getElementById('createProfesseurForm');
+        if (createForm) {
+            createForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                fetch('/Professeurs/Create', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(html => {
+                    if (html.includes('success') || html.includes('Validation')) {
+                        bootstrap.Modal.getInstance(document.getElementById('createProfesseurModal')).hide();
+                        location.reload();
+                    } else {
+                        document.getElementById('createProfesseurForm').innerHTML += '<div class="alert alert-danger mt-3">' + html + '</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur serveur');
+                });
+            });
+        }
+    });
+</script>

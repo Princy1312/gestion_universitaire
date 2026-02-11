@@ -1,0 +1,78 @@
+@model Etudiant
+@{
+    ViewData["Title"] = "Nouvel étudiant";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Ajouter un étudiant</h4>
+            </div>
+            <div class="card-body">
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Matricule" class="form-label">Matricule <span class="text-danger">*</span></label>
+                            <input asp-for="Matricule" class="form-control" placeholder="ETU-2024-001" />
+                            <span asp-validation-for="Matricule" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Nom" class="form-label">Nom <span class="text-danger">*</span></label>
+                            <input asp-for="Nom" class="form-control" />
+                            <span asp-validation-for="Nom" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="Prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
+                            <input asp-for="Prenom" class="form-control" />
+                            <span asp-validation-for="Prenom" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                            <input asp-for="Email" class="form-control" type="email" />
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Telephone" class="form-label">Téléphone</label>
+                            <input asp-for="Telephone" class="form-control" />
+                            <span asp-validation-for="Telephone" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="DateNaissance" class="form-label">Date de naissance</label>
+                            <input asp-for="DateNaissance" class="form-control" type="date" />
+                            <span asp-validation-for="DateNaissance" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Adresse" class="form-label">Adresse</label>
+                            <input asp-for="Adresse" class="form-control" />
+                            <span asp-validation-for="Adresse" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="d-flex justify-content-between">
+                        <a href="/Etudiants" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-check-lg me-2"></i>Enregistrer
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

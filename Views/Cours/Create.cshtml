@@ -1,0 +1,314 @@
+@model Cours
+@{
+    ViewData["Title"] = "Nouveau cours";
+}
+
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
+        --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
+
+    .form-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--glass-shadow);
+        padding: 3rem;
+        margin: 2rem auto;
+        max-width: 900px;
+    }
+
+    .form-header {
+        background: var(--gradient-purple);
+        border-radius: 20px 20px 0 0;
+        padding: 2.5rem;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        margin: -3rem -3rem 2.5rem -3rem;
+    }
+
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(40px);
+        transform: scale(1.1);
+    }
+
+    .form-floating-custom label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        padding-left: 0.75rem;
+        transform-origin: 0 0.75rem;
+    }
+
+    .form-floating-custom input:focus ~ label,
+    .form-floating-custom select:focus ~ label,
+    .form-floating-custom textarea:focus ~ label {
+        color: #8b5cf6;
+    }
+
+    .form-control-custom, .form-select-custom, .form-control-custom:focus {
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-control-custom:focus, .form-select-custom:focus {
+        background: rgba(255, 255, 255, 0.6);
+        border-color: #8b5cf6;
+        box-shadow: 0 0 0 0.25rem rgba(139, 92, 246, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .input-group-custom .input-group-text {
+        background: rgba(139, 92, 246, 0.2);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+        border-right: none;
+        border-radius: 16px 0 0 16px;
+        color: #8b5cf6;
+    }
+
+    .btn-modern-primary {
+        background: var(--gradient-purple);
+        border: none;
+        border-radius: 16px;
+        padding: 1rem 2.5rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+    }
+
+    .btn-modern-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(139, 92, 246, 0.4);
+    }
+
+    .btn-modern-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 16px;
+        padding: 1rem 2rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.1);
+        border: 2px dashed rgba(139, 92, 246, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .file-input-wrapper:hover {
+        border-color: #8b5cf6;
+        background: rgba(139, 92, 246, 0.1);
+    }
+
+    .form-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container-fluid py-5 min-vh-100 d-flex align-items-center" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
+    <div class="row justify-content-center w-100">
+        <div class="col-12">
+            <div class="form-container fade-in">
+                <!-- Header -->
+                <div class="form-header position-relative" style="z-index: 2;">
+                    <h1 class="h3 mb-1 fw-bold">
+                        <i class="bi bi-plus-circle me-3"></i>Création de cours
+                    </h1>
+                    <p class="mb-0 opacity-90">Remplissez les informations du nouveau cours</p>
+                </div>
+
+                <!-- Form -->
+                <form asp-action="Create" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4 d-none"></div>
+
+                    <!-- Section principale -->
+                    <div class="form-section fade-in">
+                        <h5 class="fw-semibold mb-4 pb-2 border-bottom border-purple">
+                            <i class="bi bi-info-circle me-2 text-purple"></i>Informations principales
+                        </h5>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Code" class="form-control form-control-custom" id="Code" placeholder="INF101" required />
+                                    <label for="Code">Code du cours <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Code" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Intitule" class="form-control form-control-custom" id="Intitule" placeholder="Introduction à la programmation" required />
+                                    <label for="Intitule">Intitulé complet <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Intitule" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating form-floating-custom mt-4">
+                            <textarea asp-for="Description" class="form-control form-control-custom" id="Description" rows="4" placeholder="Description détaillée du cours..."></textarea>
+                            <label for="Description">Description</label>
+                            <span asp-validation-for="Description" class="text-danger small d-block mt-1"></span>
+                        </div>
+                    </div>
+
+                    <!-- Section paramètres -->
+                    <div class="form-section fade-in">
+                        <h5 class="fw-semibold mb-4 pb-2 border-bottom border-purple">
+                            <i class="bi bi-gear me-2 text-purple"></i>Paramètres du cours
+                        </h5>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-3">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Credits" class="form-control form-control-custom" id="Credits" type="number" min="1" max="30" required />
+                                    <label for="Credits">Crédits <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Credits" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-floating form-floating-custom">
+                                    <div class="input-group">
+                                        <input asp-for="VolumeHoraire" class="form-control form-control-custom" id="VolumeHoraire" type="number" min="1" required />
+                                        <span class="input-group-text input-group-custom">heures</span>
+                                    </div>
+                                    <label for="VolumeHoraire">Volume horaire <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="VolumeHoraire" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-custom">
+                                    <select asp-for="ProfesseurId" class="form-select form-select-custom" id="ProfesseurId">
+                                        <option value="">-- Sélectionner un professeur --</option>
+                                        @foreach (var prof in ViewBag.ProfesseurId as IEnumerable<SelectListItem>)
+                                        {
+                                            <option value="@prof.Value">@prof.Text</option>
+                                        }
+                                    </select>
+                                    <label for="ProfesseurId">Professeur responsable</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section fichier -->
+                    <div class="form-section fade-in">
+                        <h5 class="fw-semibold mb-4 pb-2 border-bottom border-purple">
+                            <i class="bi bi-file-earmark-pdf me-2 text-purple"></i>Document du cours
+                        </h5>
+                        
+                        <div class="file-input-wrapper p-4 text-center">
+                            <input type="file" id="PdfFile" name="PdfFile" class="form-control form-control-custom" accept=".pdf" />
+                            <label for="PdfFile" class="form-label fw-semibold mb-2 d-block">
+                                <i class="bi bi-cloud-upload fs-3 text-purple mb-2 d-block"></i>
+                                Fichier PDF du cours (optionnel)
+                            </label>
+                            <div class="form-text text-secondary">Maximum 10 Mo - Format PDF uniquement</div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="d-flex justify-content-between gap-3 pt-4 fade-in">
+                        <a href="/Cours" class="btn btn-modern-secondary flex-fill text-center">
+                            <i class="bi bi-arrow-left me-2"></i>Annuler
+                        </a>
+                        <button type="submit" class="btn btn-modern-primary flex-fill text-center">
+                            <i class="bi bi-check-lg me-2"></i>Créer le cours
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Validation personnalisée et animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const inputs = document.querySelectorAll('.form-control-custom, .form-select-custom');
+            
+            // Animation au focus
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'translateY(-2px)';
+                });
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Aperçu fichier
+            document.getElementById('PdfFile').addEventListener('change', function(e) {
+                const fileName = e.target.files[0]?.name || '';
+                const label = document.querySelector('label[for="PdfFile"]');
+                if (fileName) {
+                    label.innerHTML = `
+                        <i class="bi bi-check-circle-fill fs-1 text-success mb-2 d-block"></i>
+                        ${fileName}
+                        <div class="form-text text-success mt-2">${(e.target.files[0].size / 1024 / 1024).toFixed(1)} Mo</div>
+                    `;
+                }
+            });
+
+            // Confirmation avant soumission
+            form.addEventListener('submit', function(e) {
+                if (!this.checkValidity()) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                this.classList.add('was-validated');
+            });
+        });
+    </script>
+}

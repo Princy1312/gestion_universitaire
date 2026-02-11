@@ -1,0 +1,430 @@
+@model IEnumerable<Etudiant>
+@{
+    ViewData["Title"] = "Étudiants";
+}
+
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
+
+    .page-header {
+        background: var(--gradient-primary);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(40px);
+        transform: scale(1.1);
+    }
+
+    .table-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        overflow: hidden;
+    }
+
+    .table-modern {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .table-modern thead th {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        border: none;
+        font-weight: 600;
+        color: var(--text-primary);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-modern tbody tr:hover {
+        background: rgba(102, 126, 234, 0.1);
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+    }
+
+    .btn-action {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .modal-modern .modal-content {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--glass-shadow-hover);
+    }
+
+    .form-floating-modern label {
+        color: var(--text-secondary);
+        font-weight: 500;
+    }
+
+    .skeleton {
+        background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+        background-size: 200% 100%;
+        animation: loading 1.5s infinite;
+    }
+
+    @@keyframes loading {
+        0% { background-position: 200% 0; }
+        100% { background-position: -200% 0; }
+    }
+
+    .badge-modern {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .search-container {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+</style>
+
+<div class="container-fluid py-5">
+    <!-- Header moderne -->
+    <div class="page-header fade-in">
+        <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
+            <div>
+                <h1 class="h2 mb-1 fw-bold"><i class="bi bi-people me-3"></i>Gestion des étudiants</h1>
+                <p class="mb-0 opacity-90">(@Model.Count() étudiants)</p>
+            </div>
+            <button type="button" class="btn text-white fw-semibold px-4 py-2" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; backdrop-filter: blur(10px);" data-bs-toggle="modal" data-bs-target="#createEtudiantModal">
+                <i class="bi bi-person-plus me-2"></i>Nouvel étudiant
+            </button>
+        </div>
+    </div>
+
+    <!-- Barre de recherche -->
+    <div class="card table-container fade-in">
+        <div class="card-header p-4 border-0">
+            <form method="get" class="row g-3 align-items-center">
+                <div class="col-md-8">
+                    <div class="search-container">
+                        <div class="input-group">
+                            <span class="input-group-text bg-transparent border-0 px-3">
+                                <i class="bi bi-search text-secondary"></i>
+                            </span>
+                            <input type="text" name="searchString" class="form-control bg-transparent border-0 ps-0" 
+                                   placeholder="Rechercher par nom, email ou matricule..." 
+                                   value="@Context.Request.Query["searchString"]" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-outline-primary flex-fill rounded-3 fw-semibold">
+                            <i class="bi bi-search me-2"></i>Rechercher
+                        </button>
+                        <a href="/Etudiants" class="btn btn-secondary rounded-3">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Tableau responsive -->
+        <div class="table-responsive">
+            <table class="table table-modern mb-0">
+                <thead>
+                    <tr>
+                        <th>Matricule</th>
+                        <th>Nom complet</th>
+                        <th>Email</th>
+                        <th>Téléphone</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="empty-state">
+                                <i class="bi bi-people display-3 opacity-25 mb-4 d-block"></i>
+                                <h4 class="mb-2">Aucun étudiant trouvé</h4>
+                                <p class="mb-0">Commencez par ajouter votre premier étudiant.</p>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var etudiant in Model)
+                    {
+                        <tr class="fade-in">
+                            <td>
+                                <span class="badge bg-primary badge-modern">@etudiant.Matricule</span>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong class="d-block text-primary">@etudiant.Nom</strong>
+                                    <small class="text-secondary">@etudiant.Prenom</small>
+                                </div>
+                            </td>
+                            <td>
+                                <small class="text-secondary d-block">@etudiant.Email</small>
+                            </td>
+                            <td>
+                                <small class="text-secondary">@(etudiant.Telephone ?? "<i class='bi bi-dash'></i>")</small>
+                            </td>
+                            <td>
+                                @if (etudiant.Actif)
+                                {
+                                    <span class="badge bg-success badge-modern">Actif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary badge-modern">Inactif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn-action btn-outline-info" onclick="loadDetails(@etudiant.Id)" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button type="button" class="btn-action btn-outline-warning" onclick="loadEdit(@etudiant.Id)" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <a href="/Etudiants/Delete/@etudiant.Id" class="btn-action btn-outline-danger" title="Supprimer" onclick="return confirm('Confirmer la suppression ?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modales modernisées (Create, Details, Edit) -->
+<!-- Create Etudiant Modal -->
+<div class="modal fade modal-modern" id="createEtudiantModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-person-plus me-2 text-success"></i>Ajouter un étudiant</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form id="createEtudiantForm" class="needs-validation" novalidate>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Matricule" name="Matricule" placeholder="ETU-2024-001" required />
+                                <label for="Matricule">Matricule <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Nom" name="Nom" placeholder="Nom" required />
+                                <label for="Nom">Nom <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-floating">
+                                <input type="text" class="form-control" id="Prenom" name="Prenom" placeholder="Prénom" required />
+                                <label for="Prenom">Prénom <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Requis</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row g-4 mt-3">
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="email" class="form-control" id="Email" name="Email" placeholder="email@example.com" required />
+                                <label for="Email">Email <span class="text-danger">*</span></label>
+                                <div class="invalid-feedback">Email valide requis</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-floating">
+                                <input type="tel" class="form-control" id="Telephone" name="Telephone" placeholder="Téléphone" />
+                                <label for="Telephone">Téléphone</label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-outline-secondary rounded-3 px-4" data-bs-dismiss="modal">Annuler</button>
+                <button type="submit" form="createEtudiantForm" class="btn text-white rounded-3 px-4 fw-semibold" style="background: var(--gradient-primary);">
+                    <i class="bi bi-check-lg me-2"></i>Enregistrer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Details Modal -->
+<div class="modal fade modal-modern" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-eye me-2 text-info"></i>Détails complets</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="detailsContent">
+                <!-- Chargement dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Edit Modal -->
+<div class="modal fade modal-modern" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold"><i class="bi bi-pencil me-2 text-warning"></i>Modifier</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4" id="editContent">
+                <!-- Chargement dynamique -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Scripts améliorés avec skeletons et validation
+    function showSkeleton(containerId) {
+        document.getElementById(containerId).innerHTML = `
+            <div class="row g-3">
+                <div class="col-12"><div class="skeleton h-100" style="height: 20px;"></div></div>
+                <div class="col-md-6"><div class="skeleton h-100" style="height: 40px;"></div></div>
+                <div class="col-md-6"><div class="skeleton h-100" style="height: 40px;"></div></div>
+            </div>
+        `;
+    }
+
+    function loadDetails(id) {
+        showSkeleton('detailsContent');
+        fetch(`/Etudiants/Details/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const content = doc.querySelector('.card-body')?.innerHTML || html;
+                document.getElementById('detailsContent').innerHTML = content;
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('detailsContent').innerHTML = '<div class="alert alert-danger">Erreur de chargement.</div>';
+                new bootstrap.Modal(document.getElementById('detailsModal')).show();
+            });
+    }
+
+    function loadEdit(id) {
+        showSkeleton('editContent');
+        fetch(`/Etudiants/Edit/${id}`)
+            .then(response => response.text())
+            .then(html => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(html, 'text/html');
+                const form = doc.querySelector('form')?.outerHTML || html;
+                document.getElementById('editContent').innerHTML = form;
+                new bootstrap.Modal(document.getElementById('editModal')).show();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('editContent').innerHTML = '<div class="alert alert-danger">Erreur de chargement.</div>';
+                new bootstrap.Modal(document.getElementById('editModal')).show();
+            });
+    }
+
+    // Gestion form create avec validation
+    document.addEventListener('DOMContentLoaded', function() {
+        const createForm = document.getElementById('createEtudiantForm');
+        if (createForm) {
+            createForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validation Bootstrap
+                if (!this.checkValidity()) {
+                    e.stopPropagation();
+                    this.classList.add('was-validated');
+                    return;
+                }
+
+                const formData = new FormData(this);
+                fetch('/Etudiants/Create', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(html => {
+                    if (html.includes('success') || html.includes('Validation')) {
+                        bootstrap.Modal.getInstance(document.getElementById('createEtudiantModal')).hide();
+                        location.reload();
+                    } else {
+                        document.getElementById('createEtudiantForm').innerHTML += '<div class="alert alert-danger mt-3">' + html + '</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Erreur serveur');
+                });
+            });
+        }
+    });
+</script>

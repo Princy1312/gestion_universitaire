@@ -1,0 +1,2 @@
+- [x] Modify HomeController.cs to show the last registered student only if active, otherwise null.
+- [x] Test the dashboard to ensure it displays correctly after registration and deletion.

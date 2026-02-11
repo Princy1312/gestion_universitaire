@@ -1,0 +1,239 @@
+@model IEnumerable<Cours>
+@{
+    ViewData["Title"] = "Cours";
+}
+
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
+        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
+
+    .page-header {
+        background: var(--gradient-purple);
+        border-radius: 24px;
+        padding: 2.5rem;
+        margin-bottom: 2.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .page-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(40px);
+        transform: scale(1.1);
+    }
+
+    .table-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 20px;
+        box-shadow: var(--glass-shadow);
+        overflow: hidden;
+    }
+
+    .table-modern {
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .table-modern thead th {
+        background: rgba(255, 255, 255, 0.3);
+        backdrop-filter: blur(10px);
+        border: none;
+        font-weight: 600;
+        color: var(--text-primary);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    .table-modern tbody tr {
+        transition: all 0.3s ease;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .table-modern tbody tr:hover {
+        background: rgba(139, 92, 246, 0.1);
+        transform: scale(1.01);
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+    }
+
+    .btn-action {
+        width: 42px;
+        height: 42px;
+        border-radius: 12px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        border: none;
+        margin: 0 2px;
+    }
+
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .badge-modern {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+    }
+
+    .badge-code {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        color: white;
+    }
+
+    .badge-credits {
+        background: linear-gradient(135deg, #06b6d4, #0891b2);
+        color: white;
+    }
+
+    .empty-state {
+        padding: 4rem 2rem;
+        text-align: center;
+        color: var(--text-secondary);
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="container-fluid py-5">
+    <!-- Header moderne -->
+    <div class="page-header fade-in">
+        <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
+            <div>
+                <h1 class="h2 mb-1 fw-bold"><i class="bi bi-book me-3"></i>Gestion des cours</h1>
+                <p class="mb-0 opacity-90">(@Model.Count() cours disponibles)</p>
+            </div>
+            <a href="/Cours/Create" class="btn text-white fw-semibold px-4 py-2" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; backdrop-filter: blur(10px);">
+                <i class="bi bi-plus-circle me-2"></i>Nouveau cours
+            </a>
+        </div>
+    </div>
+
+    <!-- Tableau responsive -->
+    <div class="card table-container fade-in">
+        <div class="table-responsive">
+            <table class="table table-modern mb-0">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Intitulé</th>
+                        <th>Professeur</th>
+                        <th>Crédits</th>
+                        <th>Volume horaire</th>
+                        <th>Statut</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="7" class="empty-state">
+                                <i class="bi bi-book display-3 opacity-25 mb-4 d-block"></i>
+                                <h4 class="mb-2">Aucun cours trouvé</h4>
+                                <p class="mb-0">Commencez par ajouter votre premier cours.</p>
+                                <a href="/Cours/Create" class="btn btn-primary mt-3 rounded-3">Créer un cours</a>
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var cours in Model)
+                    {
+                        <tr class="fade-in">
+                            <td>
+                                <span class="badge badge-modern badge-code">@cours.Code</span>
+                            </td>
+                            <td>
+                                <div>
+                                    <strong class="d-block text-primary fw-semibold">@cours.Intitule</strong>
+                                </div>
+                            </td>
+                            <td>
+                                @if (cours.Professeur != null)
+                                {
+                                    <div>
+                                        <strong class="d-block text-primary">@cours.Professeur.Nom</strong>
+                                        <small class="text-secondary">@cours.Professeur.Prenom</small>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-secondary">-</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge badge-modern badge-credits">@cours.Credits crédits</span>
+                            </td>
+                            <td>
+                                <span class="fw-semibold">@cours.VolumeHoraire h</span>
+                            </td>
+                            <td>
+                                @if (cours.Actif)
+                                {
+                                    <span class="badge bg-success badge-modern">Actif</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary badge-modern">Inactif</span>
+                                }
+                            </td>
+                            <td class="text-end">
+                                <div class="btn-group" role="group">
+                                    <a href="/Cours/Details/@cours.Id" class="btn-action btn-outline-info" title="Détails">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <a href="/Cours/Edit/@cours.Id" class="btn-action btn-outline-warning" title="Modifier">
+                                        <i class="bi bi-pencil"></i>
+                                    </a>
+                                    <a href="/Cours/Delete/@cours.Id" class="btn-action btn-outline-danger" title="Supprimer" 
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                    @if (!string.IsNullOrEmpty(cours.PdfPath))
+                                    {
+                                        <a href="@cours.PdfPath" target="_blank" class="btn-action btn-outline-primary" title="Télécharger PDF">
+                                            <i class="bi bi-file-earmark-pdf"></i>
+                                        </a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
