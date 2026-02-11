@@ -9,20 +9,20 @@
         --glass-border: rgba(255, 255, 255, 0.18);
         --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
         --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
-        --gradient-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
+        --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
         --text-primary: #1e293b;
         --text-secondary: #64748b;
     }
 
     .page-header {
-        background: var(--gradient-purple);
+        background: var(--gradient-primary);
         border-radius: 24px;
         padding: 2.5rem;
         margin-bottom: 2.5rem;
         color: white;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
     }
 
     .page-header::before {
@@ -35,6 +35,7 @@
         background: inherit;
         filter: blur(40px);
         transform: scale(1.1);
+        opacity: 0.8;
     }
 
     .table-container {
@@ -44,11 +45,17 @@
         border-radius: 20px;
         box-shadow: var(--glass-shadow);
         overflow: hidden;
+        transition: all 0.3s ease;
+    }
+
+    .table-container:hover {
+        box-shadow: var(--glass-shadow-hover);
     }
 
     .table-modern {
         margin: 0;
         border-radius: 0;
+        --bs-table-bg: transparent;
     }
 
     .table-modern thead th {
@@ -60,6 +67,10 @@
         position: sticky;
         top: 0;
         z-index: 10;
+        padding: 1.25rem 1.5rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
     }
 
     .table-modern tbody tr {
@@ -67,27 +78,66 @@
         border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
 
+    .table-modern tbody tr:last-child {
+        border-bottom: none;
+    }
+
     .table-modern tbody tr:hover {
-        background: rgba(139, 92, 246, 0.1);
-        transform: scale(1.01);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+        background: rgba(124, 58, 237, 0.1);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(124, 58, 237, 0.1);
+    }
+
+    .table-modern tbody td {
+        padding: 1.25rem 1.5rem;
+        vertical-align: middle;
+        border-color: rgba(255, 255, 255, 0.1);
     }
 
     .btn-action {
-        width: 42px;
-        height: 42px;
+        width: 38px;
+        height: 38px;
         border-radius: 12px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         transition: all 0.3s ease;
-        border: none;
-        margin: 0 2px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--text-primary);
+        margin: 0 3px;
     }
 
     .btn-action:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-action.btn-outline-warning {
+        color: #f59e0b;
+        border-color: rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-action.btn-outline-warning:hover {
+        background: rgba(245, 158, 11, 0.1);
+    }
+
+    .btn-action.btn-outline-danger {
+        color: #ef4444;
+        border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-action.btn-outline-danger:hover {
+        background: rgba(239, 68, 68, 0.1);
+    }
+
+    .btn-action.btn-outline-primary {
+        color: #3b82f6;
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    .btn-action.btn-outline-primary:hover {
+        background: rgba(59, 130, 246, 0.1);
     }
 
     .badge-modern {
@@ -95,16 +145,26 @@
         padding: 0.5rem 1rem;
         border-radius: 20px;
         font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .badge-code {
-        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
         color: white;
+        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
     }
 
     .badge-credits {
-        background: linear-gradient(135deg, #06b6d4, #0891b2);
+        background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
         color: white;
+        box-shadow: 0 4px 12px rgba(6, 182, 212, 0.2);
+    }
+
+    .badge-status {
+        padding: 0.4rem 0.9rem;
+        font-size: 0.75rem;
     }
 
     .empty-state {
@@ -120,42 +180,115 @@
     @@keyframes fadeInUp {
         from {
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(20px);
         }
         to {
             opacity: 1;
             transform: translateY(0);
         }
     }
+
+    .btn-add-new {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 16px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-add-new:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-title {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        display: block;
+    }
+
+    .professor-name {
+        font-weight: 500;
+        color: var(--text-primary);
+        display: block;
+        margin-bottom: 0.25rem;
+    }
+
+    .professor-title {
+        font-size: 0.8rem;
+        color: var(--text-secondary);
+    }
+
+    .volume-horaire {
+        font-weight: 600;
+        color: var(--text-primary);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .volume-horaire i {
+        font-size: 1.25rem;
+        color: #8b5cf6;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: flex-end;
+    }
+
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        padding: 0.4rem 1rem;
+        border-radius: 50px;
+    }
+
+    .status-badge i {
+        font-size: 0.6rem;
+    }
 </style>
 
 <div class="container-fluid py-5">
-    <!-- Header moderne -->
+    <!-- En-tête moderne -->
     <div class="page-header fade-in">
         <div class="d-flex justify-content-between align-items-center position-relative" style="z-index: 2;">
             <div>
-                <h1 class="h2 mb-1 fw-bold"><i class="bi bi-book me-3"></i>Gestion des cours</h1>
-                <p class="mb-0 opacity-90">(@Model.Count() cours disponibles)</p>
+                <h1 class="h2 mb-2 fw-bold"><i class="bi bi-book me-3"></i>Gestion des cours</h1>
+                <p class="mb-0 opacity-90">@Model.Count() cours enregistrés</p>
             </div>
-            <a href="/Cours/Create" class="btn text-white fw-semibold px-4 py-2" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; backdrop-filter: blur(10px);">
-                <i class="bi bi-plus-circle me-2"></i>Nouveau cours
+            <a href="/Cours/Create" class="btn-add-new">
+                <i class="bi bi-plus-circle"></i>Nouveau cours
             </a>
         </div>
     </div>
 
-    <!-- Tableau responsive -->
+    <!-- Tableau des cours -->
     <div class="card table-container fade-in">
         <div class="table-responsive">
             <table class="table table-modern mb-0">
                 <thead>
                     <tr>
-                        <th>Code</th>
+                        <th style="width: 120px;">Code</th>
                         <th>Intitulé</th>
                         <th>Professeur</th>
                         <th>Crédits</th>
                         <th>Volume horaire</th>
                         <th>Statut</th>
-                        <th class="text-end">Actions</th>
+                        <th style="width: 180px;" class="text-end">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -164,9 +297,11 @@
                         <tr>
                             <td colspan="7" class="empty-state">
                                 <i class="bi bi-book display-3 opacity-25 mb-4 d-block"></i>
-                                <h4 class="mb-2">Aucun cours trouvé</h4>
-                                <p class="mb-0">Commencez par ajouter votre premier cours.</p>
-                                <a href="/Cours/Create" class="btn btn-primary mt-3 rounded-3">Créer un cours</a>
+                                <h4 class="mb-3">Aucun cours enregistré</h4>
+                                <p class="mb-4">Commencez par ajouter votre premier cours à la liste.</p>
+                                <a href="/Cours/Create" class="btn btn-primary px-4 py-2 rounded-3 fw-semibold">
+                                    <i class="bi bi-plus-circle me-2"></i>Créer un cours
+                                </a>
                             </td>
                         </tr>
                     }
@@ -174,57 +309,69 @@
                     {
                         <tr class="fade-in">
                             <td>
-                                <span class="badge badge-modern badge-code">@cours.Code</span>
+                                <span class="badge badge-modern badge-code">
+                                    <i class="bi bi-tag"></i>@cours.Code
+                                </span>
                             </td>
                             <td>
-                                <div>
-                                    <strong class="d-block text-primary fw-semibold">@cours.Intitule</strong>
-                                </div>
+                                <span class="course-title">@cours.Intitule</span>
+                                @if (!string.IsNullOrEmpty(cours.Description))
+                                {
+                                    <small class="text-muted d-block mt-1">@(cours.Description.Length > 50 ? cours.Description.Substring(0, 50) + "..." : cours.Description)</small>
+                                }
                             </td>
                             <td>
                                 @if (cours.Professeur != null)
                                 {
                                     <div>
-                                        <strong class="d-block text-primary">@cours.Professeur.Nom</strong>
-                                        <small class="text-secondary">@cours.Professeur.Prenom</small>
+                                        <span class="professor-name">@cours.Professeur.Nom @cours.Professeur.Prenom</span>
+                                        @if (!string.IsNullOrEmpty(cours.Professeur.Grade))
+                                        {
+                                            <span class="professor-title">@cours.Professeur.Grade</span>
+                                        }
                                     </div>
                                 }
                                 else
                                 {
-                                    <span class="text-secondary">-</span>
+                                    <span class="text-secondary">Non attribué</span>
                                 }
                             </td>
                             <td>
-                                <span class="badge badge-modern badge-credits">@cours.Credits crédits</span>
+                                <span class="badge badge-modern badge-credits">
+                                    <i class="bi bi-star"></i>@cours.Credits crédits
+                                </span>
                             </td>
                             <td>
-                                <span class="fw-semibold">@cours.VolumeHoraire h</span>
+                                <span class="volume-horaire">
+                                    <i class="bi bi-clock"></i>@cours.VolumeHoraire h
+                                </span>
                             </td>
                             <td>
                                 @if (cours.Actif)
                                 {
-                                    <span class="badge bg-success badge-modern">Actif</span>
+                                    <span class="status-badge bg-success bg-opacity-10 text-success">
+                                        <i class="bi bi-check-circle-fill"></i>Actif
+                                    </span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-secondary badge-modern">Inactif</span>
+                                    <span class="status-badge bg-secondary bg-opacity-10 text-secondary">
+                                        <i class="bi bi-pause-circle-fill"></i>Inactif
+                                    </span>
                                 }
                             </td>
                             <td class="text-end">
-                                <div class="btn-group" role="group">
-                                    <a href="/Cours/Details/@cours.Id" class="btn-action btn-outline-info" title="Détails">
-                                        <i class="bi bi-eye"></i>
-                                    </a>
+                                <div class="action-buttons">
                                     <a href="/Cours/Edit/@cours.Id" class="btn-action btn-outline-warning" title="Modifier">
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     <a href="/Cours/Delete/@cours.Id" class="btn-action btn-outline-danger" title="Supprimer" 
-                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ?')">
+                                       onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce cours ? Cette action est irréversible.')">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                     @if (!string.IsNullOrEmpty(cours.PdfPath))
                                     {
-                                        <a href="@cours.PdfPath" target="_blank" class="btn-action btn-outline-primary" title="Télécharger PDF">
+                                        <a href="@cours.PdfPath" target="_blank" class="btn-action btn-outline-primary" title="Voir le PDF">
                                             <i class="bi bi-file-earmark-pdf"></i>
                                         </a>
                                     }
@@ -237,3 +384,25 @@
         </div>
     </div>
 </div>
+
+<!-- Script pour les animations et interactions -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des lignes du tableau
+        const rows = document.querySelectorAll('.table-modern tbody tr');
+        rows.forEach((row, index) => {
+            row.style.animationDelay = `${index * 0.05}s`;
+        });
+
+        // Gestion des tooltips
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl, {
+                trigger: 'hover',
+                placement: 'top',
+                container: 'body',
+                animation: true
+            });
+        });
+    });
+</script>

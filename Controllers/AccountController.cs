@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using Gestion_Universitaire.Models;
+using Gestion_Universitaire.Models.ViewModels;
 
 
 namespace Gestion_Universitaire.Controllers
@@ -115,6 +116,77 @@ namespace Gestion_Universitaire.Controllers
         }
 
         [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UploadProfilePhoto(IFormFile photo)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (photo == null || photo.Length == 0)
+            {
+                TempData["ErrorMessage"] = "Aucun fichier sélectionné.";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            // Vérifier le type de fichier
+            var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+            var fileExtension = Path.GetExtension(photo.FileName).ToLowerInvariant();
+            if (string.IsNullOrEmpty(fileExtension) || !allowedExtensions.Contains(fileExtension))
+            {
+                TempData["ErrorMessage"] = "Type de fichier non autorisé. Veuillez télécharger une image (JPG, JPEG, PNG ou GIF).";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            // Créer le dossier de stockage s'il n'existe pas
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "profile-photos");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            // Générer un nom de fichier unique
+            var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            // Enregistrer le fichier
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await photo.CopyToAsync(fileStream);
+            }
+
+            // Mettre à jour le chemin de la photo de profil de l'utilisateur
+            var webPath = $"/uploads/profile-photos/{uniqueFileName}";
+            
+            // Supprimer l'ancienne photo si elle existe
+            if (!string.IsNullOrEmpty(user.PhotoProfil))
+            {
+                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", user.PhotoProfil.TrimStart('/'));
+                if (System.IO.File.Exists(oldFilePath))
+                {
+                    System.IO.File.Delete(oldFilePath);
+                }
+            }
+            
+            user.PhotoProfil = webPath;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (!result.Succeeded)
+            {
+                TempData["ErrorMessage"] = "Une erreur est survenue lors de la mise à jour du profil.";
+                // Supprimer l'image téléchargée en cas d'échec
+                if (System.IO.File.Exists(filePath))
+                {
+                    System.IO.File.Delete(filePath);
+                }
+            }
+
+            return RedirectToAction(nameof(Profile));
+        }
+
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> Delete()
         {
@@ -152,6 +224,91 @@ namespace Gestion_Universitaire.Controllers
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> Edit()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var model = new Models.ViewModels.EditProfileViewModel
+            {
+                Id = user.Id,
+                Prenom = user.Prenom,
+                Nom = user.Nom,
+                Email = user.Email,
+                PhoneNumber = user.PhoneNumber
+            };
+
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(Models.ViewModels.EditProfileViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var user = await _userManager.FindByIdAsync(model.Id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Vérifier si l'email a été modifié
+            if (user.Email != model.Email)
+            {
+                // Vérifier si le nouvel email est déjà utilisé
+                var existingUser = await _userManager.FindByEmailAsync(model.Email);
+                if (existingUser != null && existingUser.Id != user.Id)
+                {
+                    ModelState.AddModelError(string.Empty, "Cette adresse email est déjà utilisée.");
+                    return View(model);
+                }
+                
+                // Mettre à jour l'email
+                user.Email = model.Email;
+                user.UserName = model.Email;
+                user.EmailConfirmed = false; // L'utilisateur devra confirmer son nouvel email
+            }
+
+            // Mettre à jour les autres champs
+            user.Prenom = model.Prenom;
+            user.Nom = model.Nom;
+            user.PhoneNumber = model.PhoneNumber;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                // Si l'email a été modifié, déconnecter l'utilisateur pour qu'il confirme son nouvel email
+                if (!user.EmailConfirmed)
+                {
+                    // Ici, vous pourriez envoyer un email de confirmation
+                    // await SendEmailConfirmationAsync(user);
+                    await _signInManager.SignOutAsync();
+                    TempData["StatusMessage"] = "Votre profil a été mis à jour. Veuillez confirmer votre nouvel email pour vous reconnecter.";
+                    return RedirectToAction("Login");
+                }
+
+                TempData["StatusMessage"] = "Votre profil a été mis à jour avec succès.";
+                return RedirectToAction("Profile");
+            }
+
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            return View(model);
         }
 
         [HttpPost]
@@ -235,6 +392,4 @@ namespace Gestion_Universitaire.Controllers
         [Display(Name = "Code d'authentification")]
         public string Code { get; set; } = string.Empty;
     }
-
-
 }

@@ -15,13 +15,14 @@
     }
 
     .page-header {
-        background: var(--gradient-primary);
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
         border-radius: 24px;
         padding: 2.5rem;
         margin-bottom: 2.5rem;
         color: white;
         position: relative;
         overflow: hidden;
+        box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
     }
 
     .page-header::before {
@@ -34,6 +35,7 @@
         background: inherit;
         filter: blur(40px);
         transform: scale(1.1);
+        opacity: 0.8;
     }
 
     .table-container {
@@ -85,7 +87,7 @@
 
     .btn-action:hover {
         transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     }
 
     .modal-modern .modal-content {
@@ -117,6 +119,9 @@
         padding: 0.5rem 1rem;
         border-radius: 20px;
         font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .search-container {
@@ -132,6 +137,28 @@
         color: var(--text-secondary);
     }
 
+    .btn-add-new {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        border-radius: 16px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-add-new:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: white;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+
     .fade-in {
         animation: fadeInUp 0.6s ease forwards;
     }
@@ -145,9 +172,9 @@
                 <h1 class="h2 mb-1 fw-bold"><i class="bi bi-people me-3"></i>Gestion des étudiants</h1>
                 <p class="mb-0 opacity-90">(@Model.Count() étudiants)</p>
             </div>
-            <button type="button" class="btn text-white fw-semibold px-4 py-2" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 16px; backdrop-filter: blur(10px);" data-bs-toggle="modal" data-bs-target="#createEtudiantModal">
-                <i class="bi bi-person-plus me-2"></i>Nouvel étudiant
-            </button>
+            <a href="/Etudiants/Create" class="btn-add-new" id="btnNewStudent">
+                <i class="bi bi-person-plus"></i>Nouvel étudiant
+            </a>
         </div>
     </div>
 
@@ -234,9 +261,6 @@
                             </td>
                             <td class="text-end">
                                 <div class="btn-group" role="group">
-                                    <button type="button" class="btn-action btn-outline-info" onclick="loadDetails(@etudiant.Id)" title="Détails">
-                                        <i class="bi bi-eye"></i>
-                                    </button>
                                     <button type="button" class="btn-action btn-outline-warning" onclick="loadEdit(@etudiant.Id)" title="Modifier">
                                         <i class="bi bi-pencil"></i>
                                     </button>
@@ -315,19 +339,7 @@
 </div>
 
 <!-- Details Modal -->
-<div class="modal fade modal-modern" id="detailsModal" tabindex="-1">
-    <div class="modal-dialog modal-xl">
-        <div class="modal-content">
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-bold"><i class="bi bi-eye me-2 text-info"></i>Détails complets</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-4" id="detailsContent">
-                <!-- Chargement dynamique -->
-            </div>
-        </div>
-    </div>
-</div>
+
 
 <!-- Edit Modal -->
 <div class="modal fade modal-modern" id="editModal" tabindex="-1">
@@ -426,5 +438,13 @@
                 });
             });
         }
+    });
+
+    // Debug du bouton Nouvel étudiant
+    document.getElementById('btnNewStudent')?.addEventListener('click', function(e) {
+        console.log('Bouton étudiant cliqué !');
+        console.log('URL du lien :', this.getAttribute('href'));
+        // Laisser le lien se comporter normalement
+        return true;
     });
 </script>

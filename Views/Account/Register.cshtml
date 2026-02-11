@@ -4,77 +4,381 @@
     Layout = "_Layout";
 }
 
-<div class="container">
-    <div class="row justify-content-center align-items-center min-vh-100">
-        <div class="col-md-6">
-            <div class="card shadow-lg border-0">
-                <div class="card-body p-5">
-                    <div class="text-center mb-4">
-                        <i class="bi bi-person-plus-fill text-primary" style="font-size: 3rem;"></i>
-                        <h2 class="mt-3">Créer un compte</h2>
-                        <p class="text-muted">Rejoignez la plateforme universitaire</p>
+<style>
+    .auth-container {
+        min-height: 100vh;
+        background: #ffffff;
+        padding: 2rem 0;
+    }
+    
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        border: none;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .auth-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+    }
+    
+    .auth-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 2.5rem 2rem;
+        text-align: center;
+    }
+    
+    .auth-body {
+        padding: 2.5rem;
+    }
+    
+    .auth-icon {
+        font-size: 2.5rem;
+        background: rgba(255, 255, 255, 0.2);
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+    
+    .form-control {
+        padding: 0.75rem 1rem;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s ease;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .input-group-text {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-right: none;
+        border-radius: 10px 0 0 10px !important;
+    }
+    
+    .btn-auth {
+        padding: 0.75rem 2rem;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    .btn-auth:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        color: #64748b;
+    }
+    
+    .auth-link {
+        color: #667eea;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+    
+    .auth-link:hover {
+        color: #764ba2;
+        text-decoration: underline;
+    }
+    
+    .form-check-input:checked {
+        background-color: #667eea;
+        border-color: #667eea;
+    }
+    
+    .password-strength {
+        height: 4px;
+        background: #e9ecef;
+        margin-top: 0.5rem;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+    
+    .strength-bar {
+        height: 100%;
+        width: 0%;
+        background: #dc3545;
+        transition: all 0.3s ease;
+    }
+    
+    .password-requirements {
+        font-size: 0.8rem;
+        color: #6c757d;
+        margin-top: 0.5rem;
+    }
+    
+    .requirement {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0.25rem;
+    }
+    
+    .requirement i {
+        margin-right: 0.5rem;
+        font-size: 0.7rem;
+    }
+    
+    .requirement.valid {
+        color: #28a745;
+    }
+    
+    .requirement.valid i {
+        color: #28a745;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-lg-8">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">
+                            <i class="bi bi-person-plus-fill"></i>
+                        </div>
+                        <h2 class="h3 mb-2">Créer un compte</h2>
+                        <p class="mb-0 opacity-90">Rejoignez la plateforme universitaire</p>
                     </div>
-
-                    <form asp-action="Register" method="post">
-                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Nom" class="form-label">Nom</label>
-                                <input asp-for="Nom" class="form-control" placeholder="Votre nom" />
-                                <span asp-validation-for="Nom" class="text-danger small"></span>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label asp-for="Prenom" class="form-label">Prénom</label>
-                                <input asp-for="Prenom" class="form-control" placeholder="Votre prénom" />
-                                <span asp-validation-for="Prenom" class="text-danger small"></span>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Email" class="form-label">Email</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
-                                <input asp-for="Email" class="form-control" placeholder="votre@email.com" />
-                            </div>
-                            <span asp-validation-for="Email" class="text-danger small"></span>
-                        </div>
-
-                        <div class="mb-3">
-                            <label asp-for="Password" class="form-label">Mot de passe</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
-                                <input asp-for="Password" class="form-control" type="password" placeholder="Min. 8 caractères" />
-                            </div>
-                            <span asp-validation-for="Password" class="text-danger small"></span>
-                            <small class="text-muted">Minimum 8 caractères, avec majuscule, minuscule, chiffre et caractère spécial</small>
-                        </div>
-
-                        <div class="mb-4">
-                            <label asp-for="ConfirmPassword" class="form-label">Confirmer le mot de passe</label>
-                            <div class="input-group">
-                                <span class="input-group-text"><i class="bi bi-lock-fill"></i></span>
-                                <input asp-for="ConfirmPassword" class="form-control" type="password" placeholder="Confirmez votre mot de passe" />
-                            </div>
-                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 py-2">
-                            <i class="bi bi-person-check me-2"></i>Créer mon compte
-                        </button>
-                    </form>
-
-                    <hr class="my-4">
                     
-                    <p class="text-center mb-0">
-                        Déjà inscrit ? <a href="/Account/Login">Se connecter</a>
-                    </p>
+                    <div class="auth-body">
+                        <form asp-action="Register" method="post" id="registerForm">
+                            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                            
+
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <label asp-for="Nom" class="form-label fw-semibold">Nom</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input asp-for="Nom" class="form-control" placeholder="Votre nom" />
+                                    </div>
+                                    <span asp-validation-for="Nom" class="text-danger small"></span>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <label asp-for="Prenom" class="form-label fw-semibold">Prénom</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="bi bi-person"></i></span>
+                                        <input asp-for="Prenom" class="form-control" placeholder="Votre prénom" />
+                                    </div>
+                                    <span asp-validation-for="Prenom" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="Email" class="form-label fw-semibold">Adresse email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                    <input asp-for="Email" class="form-control" placeholder="votre@email.com" />
+                                </div>
+                                <span asp-validation-for="Email" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="Password" class="form-label fw-semibold">Mot de passe</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                    <input asp-for="Password" class="form-control" type="password" id="password" placeholder="Min. 8 caractères" />
+                                    <button class="btn btn-outline-secondary toggle-password" type="button">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="password-strength mt-2">
+                                    <div class="strength-bar" id="strengthBar"></div>
+                                </div>
+                                <div class="password-requirements">
+                                    <div class="requirement" id="length">
+                                        <i class="bi bi-dash-circle"></i> 8 caractères minimum
+                                    </div>
+                                    <div class="requirement" id="uppercase">
+                                        <i class="bi bi-dash-circle"></i> 1 majuscule
+                                    </div>
+                                    <div class="requirement" id="number">
+                                        <i class="bi bi-dash-circle"></i> 1 chiffre
+                                    </div>
+                                    <div class="requirement" id="special">
+                                        <i class="bi bi-dash-circle"></i> 1 caractère spécial
+                                    </div>
+                                </div>
+                                <span asp-validation-for="Password" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="ConfirmPassword" class="form-label fw-semibold">Confirmer le mot de passe</label>
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bi bi-shield-lock"></i></span>
+                                    <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPassword" placeholder="Confirmez votre mot de passe" />
+                                    <button class="btn btn-outline-secondary toggle-password" type="button">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                </div>
+                                <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                                <div id="passwordMatch" class="text-success small mt-1"></div>
+                            </div>
+
+                            <button type="submit" class="btn btn-auth w-100 py-3 mb-3">
+                                <i class="bi bi-person-plus me-2"></i>Créer un compte
+                            </button>
+                            
+
+                            <div class="auth-footer">
+                                <p class="mb-0">
+                                    Vous avez déjà un compte ? 
+                                    <a asp-action="Login" class="auth-link ms-1">Se connecter</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+<script>
+    // Afficher/masquer le mot de passe
+    document.addEventListener('DOMContentLoaded', function() {
+        const togglePassword = document.querySelectorAll('.toggle-password');
+        
+        togglePassword.forEach(button => {
+            button.addEventListener('click', function() {
+                const input = this.previousElementSibling;
+                const icon = this.querySelector('i');
+                
+                if (input && icon) {
+                    if (input.type === 'password') {
+                        input.type = 'text';
+                        icon.classList.remove('bi-eye');
+                        icon.classList.add('bi-eye-slash');
+                    } else {
+                        input.type = 'password';
+                        icon.classList.remove('bi-eye-slash');
+                        icon.classList.add('bi-eye');
+                    }
+                }
+            });
+        });
+        
+        // Vérification de la force du mot de passe
+        const passwordInput = document.getElementById('password');
+        const strengthMeter = document.getElementById('password-strength-meter');
+        const strengthText = document.getElementById('password-strength-text');
+        
+        if (passwordInput) {
+            passwordInput.addEventListener('input', updatePasswordStrength);
+        }
+        
+        // Vérification de la correspondance des mots de passe
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const matchMessage = document.getElementById('password-match-message');
+        
+        if (confirmPasswordInput) {
+            confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        }
+    });
+    
+    function updatePasswordStrength() {
+        const password = this.value;
+        let strength = 0;
+        
+        // Vérification des exigences
+        const hasLength = password.length >= 8;
+        const hasUppercase = /[A-Z]/.test(password);
+        const hasNumber = /[0-9]/.test(password);
+        // Vérification simple des caractères spéciaux
+        const hasSpecial = /[^a-zA-Z0-9]/.test(password);
+        
+        // Mise à jour de l'interface utilisateur
+        updateRequirement('length', hasLength);
+        updateRequirement('uppercase', hasUppercase);
+        updateRequirement('number', hasNumber);
+        updateRequirement('special', hasSpecial);
+        
+        // Calcul de la force
+        if (hasLength) strength += 25;
+        if (hasUppercase) strength += 25;
+        if (hasNumber) strength += 25;
+        if (hasSpecial) strength += 25;
+        
+        // Mise à jour de la barre de progression
+        const strengthMeter = document.getElementById('password-strength-meter');
+        const strengthText = document.getElementById('password-strength-text');
+        
+        if (strengthMeter && strengthText) {
+            strengthMeter.value = strength;
+            strengthMeter.className = 'form-range';
+            
+            if (strength < 50) {
+                strengthMeter.classList.add('is-weak');
+                strengthText.textContent = 'Faible';
+                strengthText.className = 'text-danger';
+            } else if (strength < 75) {
+                strengthMeter.classList.add('is-medium');
+                strengthText.textContent = 'Moyen';
+                strengthText.className = 'text-warning';
+            } else {
+                strengthMeter.classList.add('is-strong');
+                strengthText.textContent = 'Fort';
+                strengthText.className = 'text-success';
+            }
+        }
+    }
+    
+    function updateRequirement(id, isValid) {
+        const element = document.getElementById(`requirement-${id}`);
+        if (element) {
+            const icon = element.querySelector('i');
+            if (isValid) {
+                element.classList.add('text-success');
+                element.classList.remove('text-muted');
+                icon.className = 'bi bi-check-circle-fill me-2';
+            } else {
+                element.classList.remove('text-success');
+                element.classList.add('text-muted');
+                icon.className = 'bi bi-circle me-2';
+            }
+        }
+    }
+    
+    function checkPasswordMatch() {
+        const password = document.getElementById('password')?.value;
+        const confirmPassword = this.value;
+        const matchMessage = document.getElementById('password-match-message');
+        
+        if (!matchMessage) return;
+        
+        if (!password || !confirmPassword) {
+            matchMessage.textContent = '';
+            return;
+        }
+        
+        if (password === confirmPassword) {
+            matchMessage.textContent = 'Les mots de passe correspondent';
+            matchMessage.className = 'text-success small mt-1';
+        } else {
+            matchMessage.textContent = 'Les mots de passe ne correspondent pas';
+            matchMessage.className = 'text-danger small mt-1';
+        }
+    }
+</script>

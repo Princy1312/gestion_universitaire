@@ -3,67 +3,232 @@
     ViewData["Title"] = "Nouveau professeur";
 }
 
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i>Ajouter un professeur</h4>
-            </div>
-            <div class="card-body">
-                <form asp-action="Create" method="post">
-                    <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+<style>
+    :root {
+        --glass-bg: rgba(255, 255, 255, 0.25);
+        --glass-border: rgba(255, 255, 255, 0.18);
+        --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+        --glass-shadow-hover: 0 16px 48px 0 rgba(31, 38, 135, 0.5);
+        --gradient-primary: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%);
+        --text-primary: #1e293b;
+        --text-secondary: #64748b;
+    }
 
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label asp-for="Matricule" class="form-label">Matricule <span class="text-danger">*</span></label>
-                            <input asp-for="Matricule" class="form-control" placeholder="PROF-2024-001" />
-                            <span asp-validation-for="Matricule" class="text-danger small"></span>
+    .form-container {
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        box-shadow: var(--glass-shadow);
+        padding: 3rem;
+        margin: 2rem auto;
+        max-width: 900px;
+    }
+
+    .form-header {
+        background: var(--gradient-primary);
+        border-radius: 20px 20px 0 0;
+        padding: 2.5rem;
+        color: white;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        margin: -3rem -3rem 2.5rem -3rem;
+    }
+
+    .form-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: inherit;
+        filter: blur(40px);
+        transform: scale(1.1);
+    }
+
+    .form-floating-custom label {
+        color: var(--text-secondary);
+        font-weight: 500;
+        padding-left: 0.75rem;
+        transform-origin: 0 0.75rem;
+    }
+
+    .form-control-custom, .form-select-custom, .form-control-custom:focus {
+        background: rgba(255, 255, 255, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 16px;
+        padding: 1rem 1.25rem;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .form-control-custom:focus, .form-select-custom:focus {
+        background: rgba(255, 255, 255, 0.6);
+        border-color: #ec4899;
+        box-shadow: 0 0 0 0.25rem rgba(236, 72, 153, 0.25);
+        transform: translateY(-2px);
+    }
+
+    .btn-modern-primary {
+        background: var(--gradient-primary);
+        border: none;
+        border-radius: 16px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-modern-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 32px rgba(236, 72, 153, 0.4);
+        color: white;
+    }
+
+    .btn-modern-secondary {
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: var(--text-primary);
+        border-radius: 16px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+
+    .btn-modern-secondary:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+        color: var(--text-primary);
+    }
+
+    .form-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .fade-in {
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container-fluid py-5 min-vh-100 d-flex align-items-center" style="background: linear-gradient(135deg, #fdf2f8 0%, #f3e8ff 100%);">
+    <div class="row justify-content-center w-100">
+        <div class="col-12">
+            <div class="form-container fade-in">
+                <!-- En-tête -->
+                <div class="form-header position-relative" style="z-index: 2;">
+                    <h1 class="h3 mb-1 fw-bold">
+                        <i class="bi bi-person-plus me-3"></i>Nouveau Professeur
+                    </h1>
+                    <p class="mb-0 opacity-90">Remplissez les informations du professeur</p>
+                </div>
+
+                <!-- Formulaire -->
+                <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4 d-none"></div>
+
+                    <!-- Section informations personnelles -->
+                    <div class="form-section fade-in">
+                        <h5 class="fw-semibold mb-4 pb-2 border-bottom" style="border-color: #ec4899 !important;">
+                            <i class="bi bi-person-lines-fill me-2" style="color: #ec4899;"></i>Informations personnelles
+                        </h5>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Matricule" class="form-control form-control-custom" id="Matricule" placeholder="PROF-2024-001" required />
+                                    <label for="Matricule">Matricule <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Matricule" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Nom" class="form-control form-control-custom" id="Nom" placeholder="Dupont" required />
+                                    <label for="Nom">Nom <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Nom" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Prenom" class="form-control form-control-custom" id="Prenom" placeholder="Jean" required />
+                                    <label for="Prenom">Prénom <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Prenom" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label asp-for="Nom" class="form-label">Nom <span class="text-danger">*</span></label>
-                            <input asp-for="Nom" class="form-control" />
-                            <span asp-validation-for="Nom" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label asp-for="Prenom" class="form-label">Prénom <span class="text-danger">*</span></label>
-                            <input asp-for="Prenom" class="form-control" />
-                            <span asp-validation-for="Prenom" class="text-danger small"></span>
+
+                        <div class="row g-4 mt-3">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Email" type="email" class="form-control form-control-custom" id="Email" placeholder="email@example.com" required />
+                                    <label for="Email">Email <span class="text-danger">*</span></label>
+                                    <span asp-validation-for="Email" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Telephone" class="form-control form-control-custom" id="Telephone" placeholder="+33 6 12 34 56 78" />
+                                    <label for="Telephone">Téléphone</label>
+                                    <span asp-validation-for="Telephone" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
-                            <input asp-for="Email" class="form-control" type="email" />
-                            <span asp-validation-for="Email" class="text-danger small"></span>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Telephone" class="form-label">Téléphone</label>
-                            <input asp-for="Telephone" class="form-control" />
+                    <!-- Section informations professionnelles -->
+                    <div class="form-section fade-in">
+                        <h5 class="fw-semibold mb-4 pb-2 border-bottom" style="border-color: #8b5cf6 !important;">
+                            <i class="bi bi-briefcase me-2" style="color: #8b5cf6;"></i>Informations professionnelles
+                        </h5>
+                        
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-custom">
+                                    <input asp-for="Specialite" class="form-control form-control-custom" id="Specialite" placeholder="Informatique, Mathématiques..." />
+                                    <label for="Specialite">Spécialité</label>
+                                    <span asp-validation-for="Specialite" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating form-floating-custom">
+                                    <select asp-for="Grade" class="form-select form-control-custom" id="Grade">
+                                        <option value="">-- Sélectionner un grade --</option>
+                                        <option value="Assistant">Assistant</option>
+                                        <option value="Maître Assistant">Maître Assistant</option>
+                                        <option value="Maître de Conférences">Maître de Conférences</option>
+                                        <option value="Professeur">Professeur</option>
+                                    </select>
+                                    <label for="Grade">Grade</label>
+                                    <span asp-validation-for="Grade" class="text-danger small d-block mt-1"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Specialite" class="form-label">Spécialité</label>
-                            <input asp-for="Specialite" class="form-control" placeholder="Ex: Informatique, Mathématiques..." />
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label asp-for="Grade" class="form-label">Grade</label>
-                            <select asp-for="Grade" class="form-select">
-                                <option value="">-- Sélectionner --</option>
-                                <option value="Assistant">Assistant</option>
-                                <option value="Maître Assistant">Maître Assistant</option>
-                                <option value="Maître de Conférences">Maître de Conférences</option>
-                                <option value="Professeur">Professeur</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <hr class="my-4">
-                    <div class="d-flex justify-content-between">
-                        <a href="/Professeurs" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Annuler</a>
-                        <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-2"></i>Enregistrer</button>
+                    <!-- Boutons d'action -->
+                    <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                        <a href="/Professeurs" class="btn btn-modern-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Retour à la liste
+                        </a>
+                        <button type="submit" class="btn btn-modern-primary">
+                            <i class="bi bi-check-lg me-2"></i>Enregistrer le professeur
+                        </button>
                     </div>
                 </form>
             </div>
@@ -71,4 +236,50 @@
     </div>
 </div>
 
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        // Animation de validation des champs
+        document.addEventListener('DOMContentLoaded', function() {
+            // Ajout de la classe is-invalid aux champs invalides
+            const forms = document.querySelectorAll('.needs-validation');
+            
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        
+                        // Afficher le message d'erreur général
+                        const summary = form.querySelector('[asp-validation-summary]');
+                        if (summary) {
+                            summary.classList.remove('d-none');
+                        }
+                    }
+                    
+                    form.classList.add('was-validated');
+                }, false);
+            });
+            
+            // Animation des champs au focus
+            const inputs = document.querySelectorAll('.form-control-custom, .form-select-custom');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.classList.add('focused');
+                });
+                
+                input.addEventListener('blur', function() {
+                    if (this.value === '') {
+                        this.parentElement.classList.remove('focused');
+                    }
+                });
+                
+                // Initialisation des champs remplis
+                if (input.value !== '') {
+                    input.parentElement.classList.add('focused');
+                }
+            });
+        });
+    </script>
+}

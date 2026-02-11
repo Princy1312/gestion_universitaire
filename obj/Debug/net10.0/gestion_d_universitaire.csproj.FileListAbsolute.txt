@@ -514,3 +514,4 @@ C:\Users\CS\Desktop\gestion_d_universitaire\obj\Debug\net10.0\refint\gestion_d_u
 C:\Users\CS\Desktop\gestion_d_universitaire\obj\Debug\net10.0\gestion_d_universitaire.pdb
 C:\Users\CS\Desktop\gestion_d_universitaire\obj\Debug\net10.0\gestion_d_universitaire.genruntimeconfig.cache
 C:\Users\CS\Desktop\gestion_d_universitaire\obj\Debug\net10.0\ref\gestion_d_universitaire.dll
+C:\Users\CS\Desktop\gestion_d_universitaire\obj\Debug\net10.0\gestion_d_universitaire.sourcelink.json
