@@ -19,113 +19,113 @@ build_property.TargetFrameworkIdentifier = .NETCoreApp
 build_property.TargetFrameworkVersion = v10.0
 build_property.RootNamespace = gestion_d_universitaire
 build_property.RootNamespace = gestion_d_universitaire
-build_property.ProjectDir = C:\Users\CS\Desktop\gestion_d_universitaire\
+build_property.ProjectDir = C:\Users\CS\Desktop\gestion_universitaire\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 9.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Users\CS\Desktop\gestion_d_universitaire
+build_property.MSBuildProjectDirectory = C:\Users\CS\Desktop\gestion_universitaire
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 10.0
 build_property.EnableCodeStyleSeverity = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Areas/Identity/Pages/Shared/_LoginPartial.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Areas/Identity/Pages/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Delete.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxEZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Edit.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxFZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Lockout.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Lockout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2Nrb3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Login.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Login.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Profile.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Profile.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcm9maWxlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Account/Register.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Account/Register.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Cours/Create.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Cours/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Cours/Delete.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Cours/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Cours/Index.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Cours/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ291cnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Etudiants/Create.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Etudiants/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXR1ZGlhbnRzXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Etudiants/Delete.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Etudiants/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXR1ZGlhbnRzXERlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Etudiants/Edit.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Etudiants/Edit.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXR1ZGlhbnRzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Etudiants/Index.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Etudiants/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXR1ZGlhbnRzXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Home/Index.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Home/Privacy.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Professeurs/Create.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Professeurs/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmVzc2V1cnNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Professeurs/Delete.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Professeurs/Delete.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmVzc2V1cnNcRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Professeurs/Index.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Professeurs/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZmVzc2V1cnNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Shared/Error.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Shared/_LoginPartial.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Shared/_LoginPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9Mb2dpblBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Shared/_ValidationScriptsPartial.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/_ViewImports.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/_ViewImports.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/_ViewStart.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Users/CS/Desktop/gestion_d_universitaire/Views/Shared/_Layout.cshtml]
+[C:/Users/CS/Desktop/gestion_universitaire/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = b-q45gyib53d

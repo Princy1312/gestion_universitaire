@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "y5vL/IETLH0=",
+  "dgSpecHash": "8rfU5lU0fYU=",
   "success": true,
-  "projectFilePath": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj",
+  "projectFilePath": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\CS\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\CS\\.nuget\\packages\\microsoft.aspnetcore.diagnostics.entityframeworkcore\\9.0.0\\microsoft.aspnetcore.diagnostics.entityframeworkcore.9.0.0.nupkg.sha512",
@@ -43,9 +43,9 @@
       "code": "NU1701",
       "level": "Warning",
       "message": "Le package 'PDFsharp 1.50.5147' a été restauré en utilisant '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' au lieu du framework cible du projet 'net10.0'. Ce package n'est peut-être pas totalement compatible avec votre projet.",
-      "projectPath": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj",
+      "projectPath": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj",
       "warningLevel": 1,
-      "filePath": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj",
+      "filePath": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj",
       "libraryId": "PDFsharp",
       "targetGraphs": [
         "net10.0"

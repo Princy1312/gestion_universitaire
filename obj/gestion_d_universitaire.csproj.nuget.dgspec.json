@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj": {}
+    "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj": {}
   },
   "projects": {
-    "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj": {
+    "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj",
+        "projectUniqueName": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj",
         "projectName": "gestion_d_universitaire",
-        "projectPath": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\gestion_d_universitaire.csproj",
+        "projectPath": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\gestion_d_universitaire.csproj",
         "packagesPath": "C:\\Users\\CS\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\CS\\Desktop\\gestion_d_universitaire\\obj\\",
+        "outputPath": "C:\\Users\\CS\\Desktop\\gestion_universitaire\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\CS\\AppData\\Roaming\\NuGet\\NuGet.Config"
