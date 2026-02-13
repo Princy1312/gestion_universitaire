@@ -2,8 +2,10 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
 using Gestion_Universitaire.Models;
 using Gestion_Universitaire.Models.ViewModels;
+using Gestion_Universitaire.Services;
 
 
 namespace Gestion_Universitaire.Controllers
@@ -12,13 +14,16 @@ namespace Gestion_Universitaire.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IEmailService _emailService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _emailService = emailService;
         }
 
         [HttpGet]
@@ -46,8 +51,20 @@ namespace Gestion_Universitaire.Controllers
 
                 if (result.Succeeded)
                 {
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                    // Génération du code 2FA
+                    string code = new Random().Next(100000, 999999).ToString();
+                    user.Code2FA = code;
+                    user.Expiration2FA = DateTime.Now.AddMinutes(5);
+                    await _userManager.UpdateAsync(user);
+
+                    // Envoi du code par email
+                    await _emailService.EnvoyerCode(user.Email, code);
+
+                    // Stocker l'ID utilisateur en session pour la vérification
+                    HttpContext.Session.SetString("UserId2FA", user.Id);
+
+                    // Rediriger vers la page de vérification 2FA
+                    return RedirectToAction("Verify2FA");
                 }
 
                 foreach (var error in result.Errors)
@@ -186,6 +203,90 @@ namespace Gestion_Universitaire.Controllers
             return RedirectToAction(nameof(Profile));
         }
 
+        // VERIFY 2FA GET
+        [HttpGet]
+        public IActionResult Verify2FA()
+        {
+            var userId = HttpContext.Session.GetString("UserId2FA");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+            return View();
+        }
+
+        // VERIFY 2FA POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Verify2FA(string code)
+        {
+            var userId = HttpContext.Session.GetString("UserId2FA");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Utilisateur introuvable.");
+                return View();
+            }
+
+            if (user.Code2FA == code && user.Expiration2FA > DateTime.Now)
+            {
+                // Réinitialiser le code 2FA après utilisation
+                user.Code2FA = null;
+                user.Expiration2FA = null;
+                await _userManager.UpdateAsync(user);
+
+                // Supprimer l'ID utilisateur de la session
+                HttpContext.Session.Remove("UserId2FA");
+
+                // Connecter l'utilisateur
+                await _signInManager.SignInAsync(user, isPersistent: false);
+                return RedirectToAction("Index", "Home");
+            }
+
+            ModelState.AddModelError(string.Empty, "Code de vérification invalide ou expiré.");
+            return View();
+        }
+
+        // RESEND 2FA CODE
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Resend2FACode()
+        {
+            var userId = HttpContext.Session.GetString("UserId2FA");
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Json(new { success = false, message = "Session expirée. Veuillez réessayer l'inscription." });
+            }
+
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return Json(new { success = false, message = "Utilisateur introuvable." });
+            }
+
+            // Générer un nouveau code 2FA
+            string newCode = new Random().Next(100000, 999999).ToString();
+            user.Code2FA = newCode;
+            user.Expiration2FA = DateTime.Now.AddMinutes(5);
+            await _userManager.UpdateAsync(user);
+
+            // Envoyer le nouveau code par email
+            try
+            {
+                await _emailService.EnvoyerCode(user.Email, newCode);
+                return Json(new { success = true, message = "Un nouveau code a été envoyé à votre adresse email." });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = "Erreur lors de l'envoi du code. Veuillez réessayer." });
+            }
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Delete()
@@ -202,28 +303,45 @@ namespace Gestion_Universitaire.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteAccount()
+        public async Task<IActionResult> DeleteAccount(string id)
         {
-            var user = await _userManager.GetUserAsync(User);
-            if (user == null)
+            // Vérifier que l'ID fourni correspond à l'utilisateur connecté
+            var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null || currentUser.Id != id)
             {
-                return NotFound();
-            }
-
-            var result = await _userManager.DeleteAsync(user);
-            if (result.Succeeded)
-            {
-                await _signInManager.SignOutAsync();
-                TempData["StatusMessage"] = "Votre compte a été supprimé avec succès.";
+                TempData["ErrorMessage"] = "Opération non autorisée.";
                 return RedirectToAction("Index", "Home");
             }
 
-            foreach (var error in result.Errors)
+            try
             {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
+                // Supprimer d'abord l'utilisateur de la base de données
+                var result = await _userManager.DeleteAsync(currentUser);
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Échec de la suppression du compte utilisateur.");
+                }
 
-            return RedirectToAction("Index", "Home");
+                // Déconnecter l'utilisateur
+                await _signInManager.SignOutAsync();
+
+                // Supprimer le cookie d'authentification
+                await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+
+                // Supprimer les données de session
+                HttpContext.Session.Clear();
+
+                TempData["SuccessMessage"] = "Votre compte a été supprimé avec succès.";
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception ex)
+            {
+                // Journaliser l'erreur (à implémenter avec un système de journalisation)
+                // _logger.LogError(ex, "Erreur lors de la suppression du compte utilisateur");
+
+                TempData["ErrorMessage"] = "Une erreur est survenue lors de la suppression du compte. Veuillez réessayer ou contacter l'administrateur.";
+                return RedirectToAction("Delete");
+            }
         }
 
         [Authorize]

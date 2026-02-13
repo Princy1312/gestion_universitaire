@@ -1,5 +1,6 @@
 using Gestion_Universitaire.Data;
 using Gestion_Universitaire.Models;
+using Gestion_Universitaire.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,11 +27,19 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 })
 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// Enregistrement des services personnalisés
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Configuration de la session
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-
-// Register EmailService
-builder.Services.AddTransient<Gestion_Universitaire.Services.EmailService>();
 
 var app = builder.Build();
 
@@ -42,6 +51,9 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+// Utilisation des sessions
+app.UseSession();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();

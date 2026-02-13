@@ -178,9 +178,10 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                <form method="post" action="/Account/Delete" class="d-inline">
+                <form method="post" asp-action="DeleteAccount" asp-controller="Account" class="d-inline">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="btn btn-danger">
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer définitivement votre compte ? Cette action est irréversible.');">
                         <i class="bi bi-trash me-2"></i>Supprimer mon compte
                     </button>
                 </form>

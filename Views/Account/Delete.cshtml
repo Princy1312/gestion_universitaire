@@ -4,31 +4,68 @@
 }
 
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8 col-lg-6">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        
+        @if (TempData["ErrorMessage"] != null)
+        {
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
         <div class="card border-danger">
             <div class="card-header bg-danger text-white">
-                <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirmer la suppression</h4>
+                <h4 class="mb-0"><i class="bi bi-exclamation-triangle me-2"></i>Confirmer la suppression du compte</h4>
             </div>
-            <div class="card-body text-center">
-                <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
-                    <i class="bi bi-person-x text-danger" style="font-size: 3rem;"></i>
-                </div>
-                <h5>@Model.Prenom @Model.Nom</h5>
-                <p class="text-muted">Email: @Model.Email</p>
-                <p class="text-muted">Date de création: @Model.DateCreation.ToShortDateString()</p>
-
-                <div class="alert alert-warning text-start">
-                    <i class="bi bi-exclamation-triangle me-2"></i>
-                    <strong>Attention !</strong> Cette action est irréversible. Toutes les données associées à ce compte seront supprimées.
+            <div class="card-body">
+                <div class="text-center mb-4">
+                    <div class="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-4 mb-3">
+                        <i class="bi bi-person-x text-danger" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5>@Model.Prenom @Model.Nom</h5>
+                    <p class="text-muted">@Model.Email</p>
+                    <p class="text-muted small">Membre depuis @Model.DateCreation.ToString("dd/MM/yyyy")</p>
                 </div>
 
-                <form asp-action="DeleteAccount" method="post">
-                    <input type="hidden" asp-for="Id" />
-                    <div class="d-flex justify-content-center gap-3 mt-4">
-                        <a href="/Home" class="btn btn-outline-secondary">
-                            <i class="bi bi-x-lg me-2"></i>Annuler
+                <div class="alert alert-warning">
+                    <div class="d-flex">
+                        <i class="bi bi-exclamation-triangle-fill me-3" style="font-size: 1.5rem;"></i>
+                        <div>
+                            <h5 class="alert-heading">Attention !</h5>
+                            <p class="mb-1">La suppression de votre compte est une action irréversible qui entraînera :</p>
+                            <ul class="mb-0 ps-3">
+                                <li>La suppression de toutes vos données personnelles</li>
+                                <li>La perte de l'accès à votre compte</li>
+                                <li>L'impossibilité de récupérer vos informations</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="DeleteAccount" method="post" id="deleteForm">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@Model.Id" />
+                    
+                    <div class="form-check mb-4">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                        <label class="form-check-label" for="confirmDelete">
+                            Je confirme vouloir supprimer définitivement mon compte et toutes les données associées.
+                        </label>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary me-md-2">
+                            <i class="bi bi-arrow-left me-2"></i>Annuler
                         </a>
-                        <button type="submit" class="btn btn-danger">
+                        <button type="submit" class="btn btn-danger" id="deleteButton" disabled>
                             <i class="bi bi-trash me-2"></i>Supprimer définitivement
                         </button>
                     </div>
@@ -37,3 +74,19 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        // Activer/désactiver le bouton de suppression lorsque la case est cochée
+        document.getElementById('confirmDelete').addEventListener('change', function() {
+            document.getElementById('deleteButton').disabled = !this.checked;
+        });
+
+        // Confirmation avant soumission
+        document.getElementById('deleteForm').addEventListener('submit', function(e) {
+            if (!confirm('Êtes-vous absolument sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                e.preventDefault();
+            }
+        });
+    </script>
+}

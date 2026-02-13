@@ -1,0 +1,122 @@
+@{
+    ViewData["Title"] = "Vérification en deux étapes";
+    Layout = "_Layout";
+}
+
+<style>
+    .auth-container {
+        min-height: 100vh;
+        background: #f8f9fa;
+        padding: 2rem 0;
+    }
+    
+    .auth-card {
+        background: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-icon {
+        font-size: 3rem;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+    }
+    
+    .form-control:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
+    
+    .btn-primary {
+        background-color: #0d6efd;
+        border: none;
+        padding: 0.5rem 2rem;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+    }
+</style>
+
+<div class="auth-container">
+    <div class="container">
+        <div class="row justify-content-center align-items-center min-vh-100">
+            <div class="col-md-8 col-lg-6">
+                <div class="auth-card">
+                    <div class="auth-header">
+                        <div class="auth-icon">
+                            <i class="bi bi-shield-lock"></i>
+                        </div>
+                        <h2>Vérification en deux étapes</h2>
+                        <p class="text-muted">Un code de vérification a été envoyé à votre adresse email.</p>
+                    </div>
+                    
+                    <form asp-action="Verify2FA" method="post" autocomplete="off">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                        
+                        <div class="mb-3">
+                            <label for="code" class="form-label fw-semibold">Code de vérification</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-key"></i></span>
+                                <input type="text" class="form-control form-control-lg" id="code" name="code" 
+                                       placeholder="Entrez le code à 6 chiffres" required autofocus
+                                       maxlength="6" pattern="\d{6}" title="Veuillez entrer un code à 6 chiffres">
+                            </div>
+                            <div class="form-text">Veuillez entrer le code à 6 chiffres envoyé à votre adresse email.</div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">Vérifier</button>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <a href="#" id="resendCode" class="text-decoration-none">Renvoyer le code</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Auto-submit when 6 digits are entered
+        document.getElementById('code').addEventListener('input', function(e) {
+            if (this.value.length === 6) {
+                this.form.submit();
+            }
+        });
+        
+        // Handle resend code
+        document.getElementById('resendCode').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            try {
+                const response = await fetch('/Account/Resend2FACode', {
+                    method: 'POST',
+                    headers: {
+                        'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                    }
+                });
+                
+                if (response.ok) {
+                    alert('Un nouveau code a été envoyé à votre adresse email.');
+                } else {
+                    alert('Une erreur est survenue. Veuillez réessayer.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Une erreur est survenue. Veuillez réessayer.');
+            }
+        });
+    </script>
+}
